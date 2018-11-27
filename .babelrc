@@ -1,0 +1,14 @@
+{
+  "presets": [
+    "next/babel"
+  ],
+  "plugins": [
+    [
+      "emotion",
+      {
+        "inline": true
+      },
+      "inline-react-svg"
+    ]
+  ]
+}
