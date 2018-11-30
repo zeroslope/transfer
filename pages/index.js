@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
 import Link from 'next/link'
-import styled, { hydrate, css, cx } from 'react-emotion'
-import { Motion, spring } from 'react-motion'
+import styled, { hydrate, css, cx } from 'react-emotion'  // eslint-disable-line
 
 import Layout from '../components/layout'
+import Redraw from '../components/redraw'
 
 import Transfer from '../assets/svg/transfer.svg'
 import Arrow from '../assets/svg/arrow.svg'
 
 import First from '../assets/svg/first.svg'
 import Second from '../assets/svg/second.svg'
-import Third from '../assets/svg/third.svg'
 
 import R1 from '../assets/svg/R1.svg'
 import R2 from '../assets/svg/R2.svg'
@@ -57,113 +56,6 @@ const IntroItem = ({ name, description, href }) => {
       </Link>
     </div>
   )
-}
-
-function getElementOffset (el) {
-  let top = 0
-  let left = 0
-
-  // grab the offset of the element relative to it's parent,
-  // then repeat with the parent relative to it's parent,
-  // ... until we reach an element without parents.
-  do {
-    top += el.offsetTop
-    left += el.offsetLeft
-    el = el.offsetParent
-  } while (el)
-
-  return { top, left }
-}
-
-class Redraw extends Component {
-  constructor () {
-    super()
-    this.r3 = null
-    this.data = {
-      top: 0,
-      height: 0,
-      width: 0
-    }
-  }
-  componentDidMount () {
-    let top = getElementOffset(this.r3).top
-    this.data = {
-      height: this.r3.offsetHeight,
-      width: this.r3.offsetWidth,
-      top
-    }
-  }
-  getLeft () {
-    let scroll = this.props.scroll
-    let { top, height, width } = this.data
-    width = width * 0.9
-    if (scroll > top) {
-      if (scroll > top + height) {
-        return (width - 128) * 0.25
-      } else {
-        return (scroll - top) / height * (width - 128) * 0.25
-      }
-    } else {
-      return 0
-    }
-  }
-  render () {
-    let divLeft = this.getLeft()
-    // console.log(this.props)
-    return (
-      <Motion defaultStyle={{ s: 0 }} style={{ s: spring(divLeft) }}>
-        { style => (
-          <div className='relative'>
-            <div className='center mw9 w-90'>
-              <div className='flex flex-auto vh-100'
-                ref={div => { this.r3 = div }}
-                css={{
-                  minHeight: '48rem'
-                }}
-                style={{
-                  position: 'sticky',
-                  top: '0px'
-                }}
-              >
-                <div className='relative w-10 h-100 br'>
-                  <Third width='48' height='48' className='absolute right-0' css={{
-                    top: '25%',
-                    transform: 'translateY(-50%)'
-                  }} />
-                </div>
-                <div className='relative w-90 h-100'>
-                  <div className='absolute left-0 ml3' css={{
-                    top: '25%',
-                    transform: 'translateY(-50%)'
-                  }}>
-                    <span className='f4'>Enjoy!</span>
-                  </div>
-                  <div className='absolute' style={{
-                    top: `50%`,
-                    right: `${64 + style.s}px`,
-                    transform: 'translateY(-50%)',
-                    willChange: 'right'
-                  }}>
-                    <R2 width='240' />
-                  </div>
-                  <div className='absolute' style={{
-                    top: `50%`,
-                    left: `${64 + style.s}px`,
-                    transform: 'translateY(-50%)',
-                    willChange: 'transform'
-                  }}>
-                    <R2 width='240' />
-                  </div>
-                </div>
-              </div>
-              <div className='vh-100 tr' />
-
-            </div>
-          </div>)
-        }
-      </Motion>
-    )
-  }
 }
 
 export default class Index extends Component {
@@ -307,10 +199,8 @@ export default class Index extends Component {
           </div>
         </section>
 
-        <Redraw scroll={this.state.scroll} />
+        <Redraw scroll={this.state.scroll} height={this.state.height} />
 
-        <section className='vh-100' />
-        <section className='vh-100' />
       </Layout>
     )
   }

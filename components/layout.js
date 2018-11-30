@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import 'tachyons/css/tachyons.css'
 import '../assets/css/style.css'
 import { hydrate } from 'react-emotion'
+// import debounce from 'lodash.debounce'
 
 import Header from './header'
 
