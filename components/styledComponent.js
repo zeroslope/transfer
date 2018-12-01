@@ -1,7 +1,12 @@
-// import React from 'react'
-// import { css } from 'react-emotion'
+import React from 'react' // eslint-disable-line
+import styled from 'react-emotion'
 
-// const Container = (
-//   <div className="center mw">
-//   </div>
-// )
+export const SmallSpace = styled.div`
+  height: 3rem;
+  width: 100%;
+`
+
+export const MediumSpace = styled.div`
+  height: 8rem;
+  width: 100%;
+`

@@ -1,4 +1,4 @@
-function getElementOffset (el) {
+const getElementOffset = (el) => {
   let top = 0
   let left = 0
 
@@ -14,4 +14,6 @@ function getElementOffset (el) {
   return { top, left }
 }
 
-export default getElementOffset
+export {
+  getElementOffset
+}
