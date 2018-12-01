@@ -19,8 +19,9 @@ if (typeof window !== 'undefined') {
 
 const IntroItem = ({ name, description, href }) => {
   return (
-    <div className='flex flex-column justify-between ba br2 pa2'
+    <div className='flex flex-column justify-between br2 pa2 hover-expand'
       css={`
+        box-shadow: 0 0 0 4px #fff;
         @media (max-width: 768px) {
           flex: 1 100%;
           margin: auto;
@@ -36,8 +37,8 @@ const IntroItem = ({ name, description, href }) => {
       <h2 className='tc f2 mb0'>{name}</h2>
       <p className='f5 pa2'>{description}</p>
       <Link href={href}>
-        <div className='tc pa2'>
-          <a className='ph4 pv2 link f4 white'>Start</a>
+        <div className='tc pa2 link pointer'>
+          <a className='ph4 pv2 f4 white'>Start</a>
           <Arrow />
         </div>
       </Link>
