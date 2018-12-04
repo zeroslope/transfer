@@ -51,8 +51,7 @@ export default class Index extends Component {
     super()
     this.state = {
       height: 1,
-      scroll: 0,
-      scrollFixed: 0
+      scroll: 0
     }
     this.onScroll = this.onScroll.bind(this)
   }
@@ -70,17 +69,32 @@ export default class Index extends Component {
   render () {
     return (
       <Layout onScroll={this.onScroll}>
-        <section className='relative vh-100 pa1' css={{
+        <section className='relative vh-100 overflow-hidden' css={{
           paddingTop: '76px',
           minHeight: '40rem',
           maxHeight: '64rem'
         }}>
           <div className='h-100 flex flex-auto'>
-            <div className='relative w-70 h-100 bg-yellow flex flex-auto flex-column items-center justify-center'>
-              <div className='tc'>
-                <Logo width='288' height='320' />
+            <div className='relative w-100 h-100 bg-yellow flex flex-auto flex-column items-center justify-center w-70-l'>
+              <div className='lh-title tracked dn-l' css={{
+                fontFamily: 'Jenna',
+                color: '#E7040F',
+                textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                textStroke: '1px black'
+              }}>
+                <p className='f1 mt0'>Image Style Transfer</p>
               </div>
-              <div className='center f3 lh-solid black b tracked' css={{
+              <div className='tc'>
+                <Logo css={{
+                  width: '216px',
+                  height: '240px',
+                  '@media (min-width: 768px)': {
+                    width: '288px',
+                    height: '320px'
+                  }
+                }} />
+              </div>
+              <div className='center f5 lh-solid black b tracked f3-l ' css={{
                 width: 'max-content'
               }}>
                 <p>Choose your content and style.</p>
@@ -88,7 +102,7 @@ export default class Index extends Component {
                 <p>Enjoy your creation!</p>
               </div>
             </div>
-            <div className='relative w-30 h-100 bg-near-black'>
+            <div className='dn relative-l w-30-l h-100-l bg-near-black-l db-l'>
               <div className='absolute lh-title tracked' css={{
                 fontFamily: 'Jenna',
                 color: '#E7040F',
@@ -109,7 +123,7 @@ export default class Index extends Component {
         }}>
           <div className='center mw9 w-90 h-100'>
             <SmallSpace />
-            <h1 className='tc f1'>What can you do with Transfer?</h1>
+            <h1 className='tc f2 f1-l'>What can you do with Transfer?</h1>
             <SmallSpace />
             <div className='mb4 flex items-center justify-around items-center flex-wrap'>
               <IntroItem

@@ -49,10 +49,12 @@ class Redraw extends Component {
       <section className='relative pa1'>
         <div className='center mw9 w-90'>
           <div className='pb2'>
-            <h1 className='tc f1 fw7'>Redraw</h1>
-            <h2 className='tc f3 fw4'>Let famous artist redraw your photos.</h2>
+            <h1 className='tc f2 fw7 f1-l'>Redraw</h1>
+            <h2 className='tc f4 fw5 f3-l'>Let famous artist redraw your photos.</h2>
           </div>
-          <div className='flex vh-50' css={{
+
+          {/* Laptop */}
+          <div className='dn vh-50 flex-l' css={{
             minHeight: '40rem'
           }}>
             <div className='relative w-10 h-100 br'>
@@ -77,8 +79,19 @@ class Redraw extends Component {
               </div>
             </div>
           </div>
+          {/* Mobile */}
+          <div className='db tc pa2 pt4 dn-l' css={{
+            minHeight: '32rem'
+          }}>
+            <First width='32' height='32' />
+            <div className='mt2 tc'>
+              <span className='f4'>Pick your favorite style.</span>
+            </div>
+            <R1 className='w-90 h-auto mt4' />
+          </div>
 
-          <div className='flex vh-50' css={{
+          {/* Laptop */}
+          <div className='dn vh-50 flex-l' css={{
             minHeight: '40rem'
           }}>
             <div className='relative w-10 h-100 br'>
@@ -103,12 +116,24 @@ class Redraw extends Component {
               </div>
             </div>
           </div>
+          {/* Mobile */}
+          <div className='db tc pa2 pt4 dn-l' css={{
+            minHeight: '32rem'
+          }}>
+            <Second width='32' height='32' />
+            <div className='mt2 tc'>
+              <span className='f4'>Upload your photo.</span>
+            </div>
+            <R2 className='w-90 h-auto mt4' />
+          </div>
+
         </div>
+
         <Motion defaultStyle={{ s: 0 }} style={{ s: spring(divLeft, { ...presets.stiff }) }}>
           { style => (
             <div className='relative center mw9 w-90'>
               <div>
-                <div className='flex flex-auto vh-100'
+                <div className='flex flex-auto vh-100 flex-column flex-row-l'
                   ref={div => { this.r3 = div }}
                   css={{
                     minHeight: '48rem',
@@ -116,14 +141,26 @@ class Redraw extends Component {
                     top: '0px'
                   }}
                 >
-                  <div className='relative w-10 h-100 br'>
-                    <Third width='48' height='48' className='absolute right-0' css={{
-                      top: '25%',
-                      transform: 'translateY(-50%)'
+                  <div className='relative mt6 tc mt0-l w-10-l h-100-l br-l'>
+                    <Third css={{
+                      width: '32',
+                      height: '32',
+                      position: 'relative',
+                      '@media (min-width: 60rem)': {
+                        width: '48',
+                        height: '48',
+                        position: 'absolute',
+                        top: '25%',
+                        right: '0',
+                        transform: 'translateY(-50%)'
+                      }
                     }} />
+                    <div className='mt2 tc dn-l'>
+                      <span className='f4'>Enjoy!</span>
+                    </div>
                   </div>
-                  <div className='relative w-90 h-100'>
-                    <div className='absolute left-0 ml3' css={{
+                  <div className='relative h5 center w-90 h-100-l'>
+                    <div className='dn absolute left-0 ml3 db-l' css={{
                       top: '25%',
                       transform: 'translateY(-50%)'
                     }}>
@@ -159,6 +196,7 @@ class Redraw extends Component {
             </div>
           )}
         </Motion>
+
       </section>
     )
   }
