@@ -9,15 +9,15 @@ const Header = () => (
     <div className='mw9 center flex flex-auto items-center justify-between'>
       <div className='pa2 ml2'>
         <Link href='/'>
-          <Logo width='56' height='56' />
+          <a> <Logo width='56' height='56' /> </a>
         </Link>
       </div>
       <div className='mr2 tracked'>
-        <Link href='/redraw'>
-          <a className='link white ph4 pv2 fw6'>Redraw</a>
-        </Link>
         <Link href='/transfer'>
-          <a className='link white ph4 pv2 fw6'>Transfer</a>
+          <a className='link white ph4 pv2 fw6 f6 f5-ns'>Transfer</a>
+        </Link>
+        <Link href='/custom'>
+          <a className='link white ph4 pv2 fw6 f6 f5-ns'>Custom</a>
         </Link>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Link from 'next/link'
-import { css } from 'react-emotion' // eslint-disable-line
+import { css, cx } from 'react-emotion' // eslint-disable-line
 import { Motion, spring, presets } from 'react-motion'
 import { getElementOffset } from '../utils/utils.js'
 
@@ -9,6 +9,33 @@ import { SmallSpace, MediumSpace } from '../components/styledComponent'
 import First from '../assets/svg/first.svg'
 import Second from '../assets/svg/second.svg'
 import Third from '../assets/svg/third.svg'
+
+const bgImgMotionStyle = css({
+  height: '100%',
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: '18rem 100%',
+  '@media (min-width: 30em) and (max-width: 60em)': {
+    backgroundSize: '24rem 100%'
+  },
+  '@media (min-width: 60rem)': {
+    backgroundSize: '32rem 100%'
+  }
+})
+
+const bgImgStyle = css({
+  width: '18rem',
+  height: '13.5rem',
+  backgroundSize: '100% 100%',
+  backgroundRepeat: 'no-repeat',
+  '@media (min-width: 30em) and (max-width: 60em)': {
+    width: '24rem',
+    height: '18rem'
+  },
+  '@media (min-width: 60rem)': {
+    width: '32rem',
+    height: '24rem'
+  }
+})
 
 class Transfer extends Component {
   constructor () {
@@ -62,18 +89,14 @@ class Transfer extends Component {
                 top: '50%',
                 transform: 'translateY(-50%)'
               }}>
-                <span className='f4'>Upload your content photo.</span>
+                <span className='f4'>Pick your favorite style.</span>
               </div>
               <div className='absolute' css={{
                 top: '50%',
                 right: '4rem',
                 transform: 'translateY(-50%)'
               }}>
-                <div css={{
-                  width: '20rem',
-                  height: '15rem',
-                  backgroundImage: 'linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)'
-                }} />
+                <div style={{ backgroundImage: 'url(/static/snow.jpg)' }} css={bgImgStyle} />
               </div>
             </div>
           </div>
@@ -83,14 +106,10 @@ class Transfer extends Component {
           }}>
             <First width='32' height='32' />
             <div className='mt2 tc'>
-              <span className='f4'>Upload your content photo.</span>
+              <span className='f4'>Pick your favorite style.</span>
             </div>
             <div className='w-100 h-auto mt4'>
-              <div css={{
-                width: '100%',
-                height: '15rem',
-                backgroundImage: 'linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)'
-              }} />
+              <div style={{ backgroundImage: 'url(/static/snow.jpg)' }} css={bgImgStyle} className='center' />
             </div>
           </div>
 
@@ -109,18 +128,14 @@ class Transfer extends Component {
                 top: '50%',
                 transform: 'translateY(-50%)'
               }}>
-                <span className='f4'>Upload your style photo.</span>
+                <span className='f4'>Upload your photo.</span>
               </div>
               <div className='absolute' css={{
                 top: '50%',
                 right: '4rem',
                 transform: 'translateY(-50%)'
               }}>
-                <div css={{
-                  width: '20rem',
-                  height: '15rem',
-                  backgroundImage: 'linear-gradient(120deg, #f093fb 0%, #f5576c 100%)'
-                }} />
+                <div style={{ backgroundImage: 'url(/static/gold.jpg)' }} css={bgImgStyle} />
               </div>
             </div>
           </div>
@@ -130,14 +145,10 @@ class Transfer extends Component {
           }}>
             <Second width='32' height='32' />
             <div className='mt2 tc'>
-              <span className='f4'>Upload your style photo.</span>
+              <span className='f4'>Upload your photo.</span>
             </div>
             <div className='w-100 h-auto mt4'>
-              <div css={{
-                width: '100%',
-                height: '15rem',
-                backgroundImage: 'linear-gradient(120deg, #f093fb 0%, #f5576c 100%)'
-              }} />
+              <div style={{ backgroundImage: 'url(/static/gold.jpg)' }} css={bgImgStyle} className='center' />
             </div>
           </div>
 
@@ -187,23 +198,12 @@ class Transfer extends Component {
                         transform: 'translateY(-50%)'
                       }
                     }}>
-                      <div css={{
-                        width: '100%',
-                        height: '18rem',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundSize: '100% 100%',
-                        backgroundImage: 'url(/static/gold.jpg)',
-                        '@media (min-width: 60rem)': {
-                          width: '24rem'
-                        }
-                      }}>
+                      <div style={{ backgroundImage: 'url(/static/gold.jpg)' }} css={bgImgStyle} className='center'>
                         <div style={{
                           width: `${style.s}%`,
-                          height: '100%',
-                          backgroundRepeat: 'no-repeat',
-                          backgroundSize: '24rem 18rem',
                           backgroundImage: 'url(/static/result.jpg)'
-                        }} />
+                        }} css={bgImgMotionStyle}
+                        />
                       </div>
                     </div>
                   </div>
