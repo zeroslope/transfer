@@ -32,3 +32,12 @@ body {
 .hover-expand:hover {
   box-shadow: 0 0 0 8px #ffffff;
 }
+
+.avatar-uploader>.ant-upload {
+  width: 16rem;
+  height: 16rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #f4f4f4;
+}

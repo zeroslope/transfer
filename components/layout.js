@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
+import 'antd/dist/antd.css'
 import 'tachyons/css/tachyons.css'
-import '../assets/css/style.css'
-import { hydrate } from 'react-emotion'
-// import debounce from 'lodash.debounce'
+import '../static/css/style.css'
+import { hydrate, css } from 'react-emotion' // eslint-disable-line
 
 import Header from './header'
 
@@ -16,15 +16,21 @@ class Layout extends Component {
     this.handleScroll = this.handleScroll.bind(this)
   }
   handleScroll (e) {
-    this.props.onScroll({
-      offset: e.target.scrollTop
-    })
+    if (this.props.onScroll) {
+      this.props.onScroll({
+        offset: e.target.scrollTop
+      })
+    }
   }
   render () {
     let { children } = this.props
     return (
       <div
-        className='relative vh-100 overflow-scroll bg-near-black avenir'
+        className='relative vh-100 overflow-y-scroll bg-near-black avenir'
+        css={`
+          -webkit-overflow-scrolling: touch;
+          z-index: 0;
+        `}
         onScroll={this.handleScroll}
       >
         <Header />

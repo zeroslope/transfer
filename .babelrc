@@ -4,6 +4,12 @@
   ],
   "plugins": [
     "emotion",
-    "inline-react-svg"
+    "inline-react-svg",
+    [
+      "import",
+      {
+        "libraryName": "antd",
+      }
+    ]
   ]
 }

@@ -190,7 +190,9 @@ class Transfer extends Component {
                       <div css={{
                         width: '100%',
                         height: '18rem',
-                        backgroundImage: 'linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundSize: '100% 100%',
+                        backgroundImage: 'url(/static/gold.jpg)',
                         '@media (min-width: 60rem)': {
                           width: '24rem'
                         }
@@ -198,7 +200,9 @@ class Transfer extends Component {
                         <div style={{
                           width: `${style.s}%`,
                           height: '100%',
-                          backgroundImage: 'linear-gradient(to right, #6a11cb 0%, #2575fc 100%)'
+                          backgroundRepeat: 'no-repeat',
+                          backgroundSize: '24rem 18rem',
+                          backgroundImage: 'url(/static/result.jpg)'
                         }} />
                       </div>
                     </div>
