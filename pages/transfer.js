@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Layout from '../components/layout'
-// import Lightbox from 'react-images'
+import Lightbox from 'react-images'
+import Gallery from 'react-photo-gallery'
 import axios from 'axios'
 import { Upload, Icon, message } from 'antd'
 import { MediumSpace } from '../components/styledComponent'
@@ -12,13 +13,17 @@ if (typeof window !== 'undefined') {
   hydrate(window.__NEXT_DATA__.ids)
 }
 
-const MockList = [
-  { src: '/static/girl.jpg' },
-  { src: '/static/gold.jpg' },
-  { src: '/static/blocks.jpg' },
-  { src: '/static/star.jpg' },
-  { src: '/static/tree.jpg' }
-]
+const baseUrl = 'http://10.141.208.253:2333'
+
+// const MockList = [
+//   { src: '/static/girl.jpg', width: 4, height: 3 },
+//   { src: '/static/gold.jpg', width: 4, height: 3 },
+//   { src: '/static/blocks.jpg', width: 3, height: 4 },
+//   { src: '/static/star.jpg', width: 4, height: 3 },
+//   { src: '/static/tree.jpg', width: 4, height: 3 },
+//   { src: '/static/library1.jpg', width: 4, height: 3 },
+//   { src: '/static/library2.jpg', width: 4, height: 3 }
+// ]
 
 function getBase64 (img, callback) {
   const reader = new FileReader() // eslint-disable-line
@@ -45,7 +50,7 @@ class Avatar extends React.Component {
       loading: false
     }
     this.handleChange = this.handleChange.bind(this)
-    this.customRequest = this.handleChange.bind(this)
+    this.customRequest = this.customRequest.bind(this)
   }
 
   handleChange (info) {
@@ -86,6 +91,8 @@ class Avatar extends React.Component {
     }
     formData.append(filename, newFile)
 
+    console.log(data.name)
+
     axios
       .post(action, formData, {
         withCredentials,
@@ -95,7 +102,6 @@ class Avatar extends React.Component {
         }
       })
       .then(res => {
-        console.log(res)
         onSuccess(res)
         onTransferDone(res)
       })
@@ -116,17 +122,18 @@ class Avatar extends React.Component {
       </div>
     )
     const imageUrl = this.state.imageUrl
+    const stylename = this.props.stylename
     return (
       <Upload
         name='file'
         listType='picture-card'
-        className='avatar-uploader db'
+        className='avatar-uploader w-90'
         showUploadList={false}
         beforeUpload={beforeUpload}
         onChange={this.handleChange}
         customRequest={this.customRequest}
-        action='http://10.141.208.253:2333/submit'
-        data={{ name: 'f' }}
+        action={'http://10.141.208.253:2333/submit'}
+        data={{ name: stylename }}
         supportServerRender
       >
         {imageUrl ? <img src={imageUrl} alt='avatar' /> : uploadButton}
@@ -140,51 +147,121 @@ class Redraw extends Component {
     super()
     this.state = {
       lightboxIsOpen: false,
-      transfer: ''
+      transfer: '',
+      currentImage: 0
     }
     this.onTransferDone = this.onTransferDone.bind(this)
+    this.closeLightbox = this.closeLightbox.bind(this)
+    this.openLightbox = this.openLightbox.bind(this)
+    this.gotoNext = this.gotoNext.bind(this)
+    this.gotoPrevious = this.gotoPrevious.bind(this)
   }
-  closeLightbox () {}
+
+  static async getInitialProps () {
+    // eslint-disable-next-line no-undef
+    const res = await axios.get(baseUrl + '/style_list', {
+      timeout: 2000
+    })
+      .then(res => {
+        if (res.status !== 200) {
+          return {}
+        } else {
+          return res.data
+        }
+        // throw new Error(`can't get the style list`)
+      })
+      .then(data => {
+        return data
+      })
+      .catch(err => {
+        return {}
+      })
+
+    return {
+      styleList: Object.keys(res).map(key => {
+        return {
+          name: key,
+          src: baseUrl + res[key][0],
+          width: res[key][1][0],
+          height: res[key][1][1]
+        }
+      })
+    }
+  }
 
   onTransferDone (res) {
     this.setState({
-      transfer: 'http://10.141.208.253:2333' + res.data
+      transfer: baseUrl + res.data
+    })
+  }
+
+  openLightbox (event, obj) {
+    this.setState({
+      currentImage: obj.index,
+      lightboxIsOpen: true
+    })
+  }
+  closeLightbox () {
+    this.setState({
+      currentImage: 0,
+      lightboxIsOpen: false
+    })
+  }
+  gotoPrevious () {
+    this.setState({
+      currentImage: this.state.currentImage - 1
+    })
+  }
+  gotoNext () {
+    this.setState({
+      currentImage: this.state.currentImage + 1
     })
   }
 
   render () {
+    let styleList = this.props.styleList
+    let currentImage = this.state.currentImage
+    console.log(currentImage)
     return (
       <Layout>
         <section className='relative min-vh-100 overflow-hidden bg-near-white' css={{
           paddingTop: '76px',
           minHeight: '40rem'
         }}>
+          <Lightbox images={styleList}
+            onClose={this.closeLightbox}
+            onClickPrev={this.gotoPrevious}
+            onClickNext={this.gotoNext}
+            currentImage={this.state.currentImage}
+            isOpen={this.state.lightboxIsOpen}
+          />
           <div className='center mw9 w-90 h-100 pv2'>
             <h1 className='tc black'>1. Choose your favorite style</h1>
-            <div className='flex flex-auto justify-between pa1 ba b--black'>
-              <div className='w-30 flex flex-column'>
-                <img src={MockList[0].src} alt={MockList[0].src.split('.')[0]} />
-                <img src={MockList[2].src} alt={MockList[2].src.split('.')[0]} className='mt2' />
-              </div>
-              <div className='w-30 flex flex-column'>
-                <img src={MockList[3].src} alt={MockList[2].src.split('.')[0]} />
-                <img src={MockList[1].src} alt={MockList[1].src.split('.')[0]} className='mt2' />
-              </div>
-              <div className='w-30 flex flex-column'>
-                <img src={MockList[4].src} alt={MockList[4].src.split('.')[0]} />
-              </div>
+            <div className='w-90 w-80-l center'>
+              {
+                styleList.length !== 0
+                  ? (<Gallery photos={styleList} onClick={this.openLightbox} />)
+                  : (
+                    <h2 className='red pa3 tc'> Can't load the style, please refresh your page.</h2>
+                  )
+              }
             </div>
 
             <div className='mt3 flex flex-auto flex-wrap'>
-              <div className='w-100 w-50-l br-l'>
+              <div className='w-100 w-50-l br-l b--moon-gray'>
                 <h1 className='tc black'>2. Upload your photo</h1>
                 <div className='flex flex-auto items-center justify-center'>
-                  <Avatar onTransferDone={this.onTransferDone} />
+                  <Avatar
+                    onTransferDone={this.onTransferDone}
+                    stylename={styleList.length === 0 ? '' : styleList[currentImage].name}
+                  />
                 </div>
               </div>
               <div className='w-100 w-50-l'>
                 <h1 className='tc black'>3. Enjoy</h1>
-                <img src={this.state.transfer} />
+                <div className='flex flex-auto items-center justify-center'>
+                  <img src={this.state.transfer} className='w-90' />
+                </div>
               </div>
             </div>
             <MediumSpace />
