@@ -70,8 +70,8 @@ class Transfer extends Component {
       <section className='relative pa1'>
         <div className='center mw9 w-90'>
           <div className='pb2'>
-            <h1 className='tc f1 fw7 f1-l'>Transfer</h1>
-            <h2 className='tc f3 fw5 f3-l'>Transfer the style of one photo to another.</h2>
+            <h1 className='tc f1 fw7 f1-l white'>Transfer</h1>
+            <h2 className='tc f3 fw5 f3-l white'>Transfer the style of one photo to another.</h2>
           </div>
 
           {/* Laptop */}

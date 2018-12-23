@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Layout from '../components/layout'
-import Lightbox from 'react-images'
-import Gallery from 'react-photo-gallery'
+// import Lightbox from 'react-images'
+import Gallery from 'react-grid-gallery'
 import axios from 'axios'
 import { Upload, Icon, message } from 'antd'
 import { MediumSpace } from '../components/styledComponent'
@@ -36,9 +36,9 @@ function beforeUpload (file) {
   if (!isJPG) {
     message.error('You can only upload JPG file!')
   }
-  const isLt2M = file.size / 1024 / 1024 < 3
+  const isLt2M = file.size / 1024 / 1024 < 5
   if (!isLt2M) {
-    message.error('Image must smaller than 3MB!')
+    message.error('Image must smaller than 5MB!')
   }
   return isJPG && isLt2M
 }
@@ -91,7 +91,7 @@ class Avatar extends React.Component {
     }
     formData.append(filename, newFile)
 
-    console.log(data.name)
+    // console.log(data.name)
 
     axios
       .post(action, formData, {
@@ -148,13 +148,16 @@ class Redraw extends Component {
     this.state = {
       lightboxIsOpen: false,
       transfer: '',
-      currentImage: 0
+      currentImage: 0,
+      styleList: [],
+      currentSelectedImage: 0
     }
     this.onTransferDone = this.onTransferDone.bind(this)
     this.closeLightbox = this.closeLightbox.bind(this)
     this.openLightbox = this.openLightbox.bind(this)
     this.gotoNext = this.gotoNext.bind(this)
     this.gotoPrevious = this.gotoPrevious.bind(this)
+    this.onSelectImage = this.onSelectImage.bind(this)
   }
 
   static async getInitialProps () {
@@ -173,20 +176,50 @@ class Redraw extends Component {
       .then(data => {
         return data
       })
-      .catch(err => {
+      .catch(err => { // eslint-disable-line
         return {}
       })
 
     return {
-      styleList: Object.keys(res).map(key => {
+      styleList: Object.keys(res).map((key, index) => {
         return {
           name: key,
           src: baseUrl + res[key][0],
-          width: res[key][1][0],
-          height: res[key][1][1]
+          thumbnail: baseUrl + res[key][0],
+          thumbnailWidth: res[key][1][0],
+          thumbnailHeight: res[key][1][1],
+          isSelected: index === 0
         }
       })
     }
+  }
+
+  componentWillMount () {
+    // console.log(this.props.styleList)
+    this.setState({
+      styleList: this.props.styleList,
+      currentSelectedImage: 0
+    })
+  }
+
+  onSelectImage (index, image) {
+    let styleList = this.state.styleList.slice()
+    styleList = styleList.map(item => {
+      return {
+        ...item,
+        isSelected: false
+      }
+    })
+    let img = styleList[index]
+    if (img.hasOwnProperty('isSelected')) {
+      img.isSelected = !img.isSelected
+    } else {
+      img.isSelected = true
+    }
+    this.setState({
+      styleList: styleList,
+      currentSelectedImage: index
+    })
   }
 
   onTransferDone (res) {
@@ -219,41 +252,48 @@ class Redraw extends Component {
   }
 
   render () {
-    let styleList = this.props.styleList
-    let currentImage = this.state.currentImage
-    console.log(currentImage)
+    let styleList = this.state.styleList
+    // console.log(styleList)
+    let currentSelectedImage = this.state.currentSelectedImage
+    // console.log(currentImage)
     return (
       <Layout>
         <section className='relative min-vh-100 overflow-hidden bg-near-white' css={{
           paddingTop: '76px',
           minHeight: '40rem'
         }}>
-          <Lightbox images={styleList}
+          {/* <Lightbox images={styleList}
             onClose={this.closeLightbox}
             onClickPrev={this.gotoPrevious}
             onClickNext={this.gotoNext}
             currentImage={this.state.currentImage}
             isOpen={this.state.lightboxIsOpen}
-          />
+      /> */ }
           <div className='center mw9 w-90 h-100 pv2'>
             <h1 className='tc black'>1. Choose your favorite style</h1>
-            <div className='w-90 w-80-l center'>
+            <div className='w-90 w-80-l center' style={{
+              display: 'block',
+              minHeight: '1px',
+              width: '100%',
+              border: '1px solid #ddd',
+              overflow: 'auto'
+            }}>
               {
                 styleList.length !== 0
-                  ? (<Gallery photos={styleList} onClick={this.openLightbox} />)
+                  ? (<Gallery images={styleList} enableImageSelection onSelectImage={this.onSelectImage} margin={1} />)
                   : (
                     <h2 className='red pa3 tc'> Can't load the style, please refresh your page.</h2>
                   )
               }
             </div>
 
-            <div className='mt3 flex flex-auto flex-wrap'>
+            <div className='mt4 flex flex-auto flex-wrap'>
               <div className='w-100 w-50-l br-l b--moon-gray'>
                 <h1 className='tc black'>2. Upload your photo</h1>
                 <div className='flex flex-auto items-center justify-center'>
                   <Avatar
                     onTransferDone={this.onTransferDone}
-                    stylename={styleList.length === 0 ? '' : styleList[currentImage].name}
+                    stylename={styleList.length === 0 ? '' : styleList[currentSelectedImage].name}
                   />
                 </div>
               </div>

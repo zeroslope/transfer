@@ -123,14 +123,18 @@ export default class Index extends Component {
         }}>
           <div className='center mw9 w-90 h-100'>
             <SmallSpace />
-            <h1 className='tc f3 f2-l'>What can you do with Magic Filter?</h1>
+            <h1 className='tc f3 f2-l white'>What can you do with Magic Filter?</h1>
             <SmallSpace />
             <div className='mb4'>
-              <h3 className='measure-wide tl db center'>
+              <h3 className='measure-wide tl db center white'>
                 Magic Filters is a flexible photo filter application which is powered by neural style transfer techniques.
                 With the help of neural network, Magic Filters is able to learn many imaginative and fancy style from sample pictures.
+              </h3>
+              <h3 className='measure-wide tl db center white'>
                 For a quick start, we have picked out a bunch of well-learned and ready-to-use styles.
                 You can easily use them to decorate your photos and make you stand out in the social Apps.
+              </h3>
+              <h3 className='measure-wide tl db center white'>
                 Moreover, if you want your customized styles, you just need simply upload the style pictures, and Magic Filters will take care of the rest for you!
               </h3>
             </div>
