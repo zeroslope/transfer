@@ -112,7 +112,7 @@ export default class Index extends Component {
                 top: '45%'
               }}>
                 <p className='f-headline ma0'>Image</p>
-                <p className='f-headline ma0'>Magic Filter</p>
+                <p className='f-headline ma0'>Magic Filters</p>
               </div>
             </div>
           </div>

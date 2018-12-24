@@ -6,14 +6,13 @@ import axios from 'axios'
 import { Upload, Icon, message } from 'antd'
 import { MediumSpace } from '../components/styledComponent'
 import styled, { hydrate, css, cx } from 'react-emotion'  // eslint-disable-line
+import { baseUrl } from '../utils/utils.js'
 
 // Adds server generated styles to emotion cache.
 // '__NEXT_DATA__.ids' is set in '_document.js'
 if (typeof window !== 'undefined') {
   hydrate(window.__NEXT_DATA__.ids)
 }
-
-const baseUrl = 'http://10.141.208.253:2333'
 
 // const MockList = [
 //   { src: '/static/girl.jpg', width: 4, height: 3 },
@@ -34,13 +33,13 @@ function getBase64 (img, callback) {
 function beforeUpload (file) {
   const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
   if (!isJPG) {
-    message.error('You can only upload JPG file!')
+    message.error('You can only upload JPG or PNG file!')
   }
-  const isLt2M = file.size / 1024 / 1024 < 5
-  if (!isLt2M) {
+  const isLt5M = file.size / 1024 / 1024 < 5
+  if (!isLt5M) {
     message.error('Image must smaller than 5MB!')
   }
-  return isJPG && isLt2M
+  return isJPG && isLt5M
 }
 
 class Avatar extends React.Component {
@@ -51,6 +50,7 @@ class Avatar extends React.Component {
     }
     this.handleChange = this.handleChange.bind(this)
     this.customRequest = this.customRequest.bind(this)
+    this.handleError = this.handleError.bind(this)
   }
 
   handleChange (info) {
@@ -93,6 +93,8 @@ class Avatar extends React.Component {
 
     // console.log(data.name)
 
+    message.success('Image is uploading, please wait.', 0.8)
+
     axios
       .post(action, formData, {
         withCredentials,
@@ -102,8 +104,19 @@ class Avatar extends React.Component {
         }
       })
       .then(res => {
-        onSuccess(res)
-        onTransferDone(res)
+        switch (res.status) {
+          case 200:
+            onSuccess(res)
+            onTransferDone(res.data)
+            return res
+          case 408:
+            console.log('408')
+            throw new Error('Timeout, Please Try again')
+          case 413:
+            throw new Error('Image is too big. Please Try again')
+          default:
+            throw new Error('Unknow action.')
+        }
       })
       .catch(onError)
 
@@ -112,6 +125,22 @@ class Avatar extends React.Component {
         console.log('upload progress is aborted.')
       }
     }
+  }
+
+  handleError (err) {
+    switch (err.response.status) {
+      case 408:
+        message.error('Timeout, Please Try again', 2)
+        break
+      case 413:
+        message.error('Image too big, Please Try again', 2)
+        break
+      default:
+        message.error('Unknow Error', 2)
+    }
+    this.setState({
+      loading: false
+    })
   }
 
   render () {
@@ -132,9 +161,10 @@ class Avatar extends React.Component {
         beforeUpload={beforeUpload}
         onChange={this.handleChange}
         customRequest={this.customRequest}
-        action={'http://10.141.208.253:2333/submit'}
+        action={baseUrl + '/submit'}
         data={{ name: stylename }}
         supportServerRender
+        onError={this.handleError}
       >
         {imageUrl ? <img src={imageUrl} alt='avatar' /> : uploadButton}
       </Upload>
@@ -180,14 +210,18 @@ class Redraw extends Component {
         return {}
       })
 
+    // Object.keys(res).map((key, index) => {
+    //   console.log(key, res[key][1][0], res[key][1][1])
+    // })
     return {
       styleList: Object.keys(res).map((key, index) => {
+        let r = res[key][1][0] / 320
         return {
           name: key,
           src: baseUrl + res[key][0],
           thumbnail: baseUrl + res[key][0],
-          thumbnailWidth: res[key][1][0],
-          thumbnailHeight: res[key][1][1],
+          thumbnailWidth: res[key][1][0] / r,
+          thumbnailHeight: res[key][1][1] / r,
           isSelected: index === 0
         }
       })
@@ -222,9 +256,9 @@ class Redraw extends Component {
     })
   }
 
-  onTransferDone (res) {
+  onTransferDone (imageUrl) {
     this.setState({
-      transfer: baseUrl + res.data
+      transfer: baseUrl + imageUrl
     })
   }
 
@@ -269,18 +303,21 @@ class Redraw extends Component {
             currentImage={this.state.currentImage}
             isOpen={this.state.lightboxIsOpen}
       /> */ }
-          <div className='center mw9 w-90 h-100 pv2'>
+          <div className='center mw9 w-100 w-90-l h-100 pv2'>
             <h1 className='tc black'>1. Choose your favorite style</h1>
-            <div className='w-90 w-80-l center' style={{
+            <div className='w-100 center' style={{
               display: 'block',
               minHeight: '1px',
-              width: '100%',
               border: '1px solid #ddd',
               overflow: 'auto'
-            }}>
+            }} css={`
+              img {
+                max-width: none;
+              }
+            `}>
               {
                 styleList.length !== 0
-                  ? (<Gallery images={styleList} enableImageSelection onSelectImage={this.onSelectImage} margin={1} />)
+                  ? (<Gallery images={styleList} enableImageSelection onSelectImage={this.onSelectImage} margin={3} />)
                   : (
                     <h2 className='red pa3 tc'> Can't load the style, please refresh your page.</h2>
                   )
@@ -300,7 +337,13 @@ class Redraw extends Component {
               <div className='w-100 w-50-l'>
                 <h1 className='tc black'>3. Enjoy</h1>
                 <div className='flex flex-auto items-center justify-center'>
-                  <img src={this.state.transfer} className='w-90' />
+                  <span className='avatar-uploader w-90'>
+                    <div className='ant-upload ant-upload-select ant-upload-select-picture-card'>
+                      <span className='ant-upload' role='button' >
+                        <img src={this.state.transfer} />
+                      </span>
+                    </div>
+                  </span>
                 </div>
               </div>
             </div>

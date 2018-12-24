@@ -14,6 +14,9 @@ const getElementOffset = (el) => {
   return { top, left }
 }
 
+const baseUrl = 'http://10.141.208.252:2333'
+
 export {
-  getElementOffset
+  getElementOffset,
+  baseUrl
 }

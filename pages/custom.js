@@ -3,14 +3,13 @@ import Layout from '../components/layout'
 import axios from 'axios'
 import { Upload, Icon, message } from 'antd'
 import styled, { hydrate, css, cx } from 'react-emotion'  // eslint-disable-line
+import { baseUrl } from '../utils/utils.js'
 
 // Adds server generated styles to emotion cache.
 // '__NEXT_DATA__.ids' is set in '_document.js'
 if (typeof window !== 'undefined') {
   hydrate(window.__NEXT_DATA__.ids)
 }
-
-const baseUrl = 'http://10.141.208.253:2333'
 
 function getBase64 (img, callback) {
   const reader = new FileReader() // eslint-disable-line
@@ -21,13 +20,13 @@ function getBase64 (img, callback) {
 function beforeUpload (file) {
   const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
   if (!isJPG) {
-    message.error('You can only upload JPG file!')
+    message.error('You can only upload JPG or PNG file!')
   }
-  const isLt2M = file.size / 1024 / 1024 < 5
-  if (!isLt2M) {
+  const isLt5M = file.size / 1024 / 1024 < 5
+  if (!isLt5M) {
     message.error('Image must smaller than 5MB!')
   }
-  return isJPG && isLt2M
+  return isJPG && isLt5M
 }
 
 class Avatar extends React.Component {
@@ -38,6 +37,8 @@ class Avatar extends React.Component {
     }
     this.handleChange = this.handleChange.bind(this)
     this.customRequest = this.customRequest.bind(this)
+    this.handleSuccess = this.handleSuccess.bind(this)
+    this.handleError = this.handleError.bind(this)
   }
 
   handleChange (info) {
@@ -67,18 +68,14 @@ class Avatar extends React.Component {
   }) {
     // EXAMPLE: post form-data with 'axios'
     const formData = new FormData() // eslint-disable-line
-    const onTransferDone = this.props.onTransferDone
     // console.log(this.props)
     let newFile = new File([file], 'image.' + file.name.split('.').pop(), { type: file.type }) // eslint-disable-line
-    // console.log('file-name', newFile.name)
     if (data) {
       Object.keys(data).map(key => {
         formData.append(key, data[key])
       })
     }
     formData.append(filename, newFile)
-
-    // console.log(data.name)
 
     axios
       .post(action, formData, {
@@ -90,7 +87,6 @@ class Avatar extends React.Component {
       })
       .then(res => {
         onSuccess(res)
-        onTransferDone(res)
       })
       .catch(onError)
 
@@ -99,6 +95,26 @@ class Avatar extends React.Component {
         console.log('upload progress is aborted.')
       }
     }
+  }
+
+  handleSuccess () {
+    message.success('Upload success!')
+  }
+
+  handleError (err) {
+    switch (err.response.status) {
+      case 408:
+        message.error('Timeout, Please Try again', 2)
+        break
+      case 413:
+        message.error('Image too big, Please Try again', 2)
+        break
+      default:
+        message.error('Unknow Error', 2)
+    }
+    this.setState({
+      loading: false
+    })
   }
 
   render () {
@@ -120,6 +136,8 @@ class Avatar extends React.Component {
         customRequest={this.customRequest}
         action={baseUrl + '/custom'}
         supportServerRender
+        onSuccess={this.handleSuccess}
+        onError={this.handleError}
       >
         {imageUrl ? <img src={imageUrl} alt='avatar' /> : uploadButton}
       </Upload>
