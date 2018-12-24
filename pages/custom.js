@@ -37,7 +37,6 @@ class Avatar extends React.Component {
     }
     this.handleChange = this.handleChange.bind(this)
     this.customRequest = this.customRequest.bind(this)
-    this.handleSuccess = this.handleSuccess.bind(this)
     this.handleError = this.handleError.bind(this)
   }
 
@@ -86,6 +85,7 @@ class Avatar extends React.Component {
         }
       })
       .then(res => {
+        message.success('Upload success!')
         onSuccess(res)
       })
       .catch(onError)
@@ -95,10 +95,6 @@ class Avatar extends React.Component {
         console.log('upload progress is aborted.')
       }
     }
-  }
-
-  handleSuccess () {
-    message.success('Upload success!')
   }
 
   handleError (err) {
@@ -136,7 +132,6 @@ class Avatar extends React.Component {
         customRequest={this.customRequest}
         action={baseUrl + '/custom'}
         supportServerRender
-        onSuccess={this.handleSuccess}
         onError={this.handleError}
       >
         {imageUrl ? <img src={imageUrl} alt='avatar' /> : uploadButton}
