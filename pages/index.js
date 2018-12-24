@@ -82,7 +82,7 @@ export default class Index extends Component {
                 textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                 textStroke: '1px black'
               }}>
-                <p className='f1 mt0'>Image Magic Filter</p>
+                <p className='f1 mt0'>Image Magic Filters</p>
               </div>
               <div className='tc'>
                 <Logo css={{
@@ -123,11 +123,11 @@ export default class Index extends Component {
         }}>
           <div className='center mw9 w-90 h-100'>
             <SmallSpace />
-            <h1 className='tc f3 f2-l white'>What can you do with Magic Filter?</h1>
+            <h1 className='tc f3 f2-l white'>What can you do with Magic Filters?</h1>
             <SmallSpace />
             <div className='mb4'>
               <h3 className='measure-wide tl db center white'>
-                Magic Filters is a flexible photo filter application which is powered by neural style transfer techniques.
+                Magic Filters is a flexible photo filters application which is powered by neural style transfer techniques.
                 With the help of neural network, Magic Filters is able to learn many imaginative and fancy style from sample pictures.
               </h3>
               <h3 className='measure-wide tl db center white'>
