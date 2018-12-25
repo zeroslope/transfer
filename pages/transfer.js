@@ -110,7 +110,7 @@ class Avatar extends React.Component {
             onTransferDone(res.data)
             return res
           case 408:
-            console.log('408')
+            // console.log('408')
             throw new Error('Timeout, Please Try again')
           case 413:
             throw new Error('Image is too big. Please Try again')
@@ -177,7 +177,7 @@ class Redraw extends Component {
     super()
     this.state = {
       lightboxIsOpen: false,
-      transfer: '',
+      imageUrl: '',
       currentImage: 0,
       styleList: [],
       currentSelectedImage: 0
@@ -257,8 +257,9 @@ class Redraw extends Component {
   }
 
   onTransferDone (imageUrl) {
+    // console.log(imageUrl)
     this.setState({
-      transfer: baseUrl + imageUrl
+      imageUrl: imageUrl
     })
   }
 
@@ -290,6 +291,7 @@ class Redraw extends Component {
     // console.log(styleList)
     let currentSelectedImage = this.state.currentSelectedImage
     // console.log(currentImage)
+    let imageUrl = this.state.imageUrl ? baseUrl + this.state.imageUrl : ''
     return (
       <Layout>
         <section className='relative min-vh-100 overflow-hidden bg-near-white' css={{
@@ -336,14 +338,17 @@ class Redraw extends Component {
               </div>
               <div className='w-100 w-50-l'>
                 <h1 className='tc black'>3. Enjoy</h1>
-                <div className='flex flex-auto items-center justify-center'>
+                <div className='flex flex-auto flex-column items-center justify-center'>
                   <span className='avatar-uploader w-90'>
                     <div className='ant-upload ant-upload-select ant-upload-select-picture-card'>
                       <span className='ant-upload' role='button' >
-                        <img src={this.state.transfer} />
+                        <img src={imageUrl} />
                       </span>
                     </div>
                   </span>
+                  {
+                    this.state.imageUrl ? <a href={imageUrl} download={this.state.imageUrl} className='ba pv1 ph2 br1 mt2 f6'>Download</a> : ''
+                  }
                 </div>
               </div>
             </div>
