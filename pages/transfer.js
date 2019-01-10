@@ -183,11 +183,13 @@ class Redraw extends Component {
       currentSelectedImage: 0
     }
     this.onTransferDone = this.onTransferDone.bind(this)
-    this.closeLightbox = this.closeLightbox.bind(this)
-    this.openLightbox = this.openLightbox.bind(this)
-    this.gotoNext = this.gotoNext.bind(this)
-    this.gotoPrevious = this.gotoPrevious.bind(this)
+    // this.closeLightbox = this.closeLightbox.bind(this)
+    // this.openLightbox = this.openLightbox.bind(this)
+    // this.gotoNext = this.gotoNext.bind(this)
+    // this.gotoPrevious = this.gotoPrevious.bind(this)
     this.onSelectImage = this.onSelectImage.bind(this)
+    this.onCurrentImageChange = this.onCurrentImageChange.bind(this)
+    this.onBoxSelectImage = this.onBoxSelectImage.bind(this)
   }
 
   static async getInitialProps () {
@@ -237,6 +239,29 @@ class Redraw extends Component {
   }
 
   onSelectImage (index, image) {
+    console.log('onSelectImage: index', index)
+    let styleList = this.state.styleList.slice()
+    styleList = styleList.map(item => {
+      return {
+        ...item,
+        isSelected: false
+      }
+    })
+    let img = styleList[index]
+    if (img.hasOwnProperty('isSelected')) {
+      img.isSelected = !img.isSelected
+    } else {
+      img.isSelected = true
+    }
+    this.setState({
+      styleList: styleList,
+      currentSelectedImage: index
+    })
+  }
+
+  onBoxSelectImage () {
+    let index = this.state.currentImage
+    console.log('onSelectImage: index', index)
     let styleList = this.state.styleList.slice()
     styleList = styleList.map(item => {
       return {
@@ -263,28 +288,32 @@ class Redraw extends Component {
     })
   }
 
-  openLightbox (event, obj) {
-    this.setState({
-      currentImage: obj.index,
-      lightboxIsOpen: true
-    })
+  onCurrentImageChange (index) {
+    this.setState({ currentImage: index })
   }
-  closeLightbox () {
-    this.setState({
-      currentImage: 0,
-      lightboxIsOpen: false
-    })
-  }
-  gotoPrevious () {
-    this.setState({
-      currentImage: this.state.currentImage - 1
-    })
-  }
-  gotoNext () {
-    this.setState({
-      currentImage: this.state.currentImage + 1
-    })
-  }
+
+  // openLightbox (event, obj) {
+  //   this.setState({
+  //     currentImage: obj.index,
+  //     lightboxIsOpen: true
+  //   })
+  // }
+  // closeLightbox () {
+  //   this.setState({
+  //     currentImage: 0,
+  //     lightboxIsOpen: false
+  //   })
+  // }
+  // gotoPrevious () {
+  //   this.setState({
+  //     currentImage: this.state.currentImage - 1
+  //   })
+  // }
+  // gotoNext () {
+  //   this.setState({
+  //     currentImage: this.state.currentImage + 1
+  //   })
+  // }
 
   render () {
     let styleList = this.state.styleList
@@ -319,7 +348,20 @@ class Redraw extends Component {
             `}>
               {
                 styleList.length !== 0
-                  ? (<Gallery images={styleList} enableImageSelection onSelectImage={this.onSelectImage} margin={3} />)
+                  ? (<Gallery images={styleList}
+                    enableImageSelection
+                    onSelectImage={this.onSelectImage}
+                    margin={3}
+                    enableLightbox
+                    currentImageWillChange={this.onCurrentImageChange}
+                    customControls={[
+                      <a key='selectimage' onClick={this.onBoxSelectImage} className='flex justify-center items-center'>
+                        <span className={`pv1 ph2 fw8 f6 ${this.state.currentImage === this.state.currentSelectedImage ? 'blue' : 'white underline'}`}>
+                          { this.state.currentImage === this.state.currentSelectedImage ? 'Selected' : 'Select this'}
+                        </span>
+                      </a>
+                    ]}
+                  />)
                   : (
                     <h2 className='red pa3 tc'> Can't load the style, please refresh your page.</h2>
                   )
