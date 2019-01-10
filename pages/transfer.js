@@ -335,7 +335,10 @@ class Redraw extends Component {
             isOpen={this.state.lightboxIsOpen}
       /> */ }
           <div className='center mw9 w-100 w-90-l h-100 pv2'>
-            <h1 className='tc black'>1. Choose your favorite style</h1>
+            <div>
+              <h1 className='tc black'>1. Choose your favorite style</h1>
+              <p className='tc black'>On PC: click the left-top of image to choose style; <br /> On phone, click the image, and click 'select this' on the dialog.</p>
+            </div>
             <div className='w-100 center' style={{
               display: 'block',
               minHeight: '1px',
